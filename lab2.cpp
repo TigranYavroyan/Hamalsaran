@@ -38,8 +38,6 @@ void printSolution(int (*sol)[N])
 void sub_the_access_matrix (int x, int y, int (*access_matrix)[8]) {
     int next_x{};
     int next_y{};
-    int prev_x{};
-    int prev_y{};
     for (int i = 0; i < 8; ++i) {
         next_x = x + xMove[i];
         next_y = y + yMove[i];
@@ -49,10 +47,6 @@ void sub_the_access_matrix (int x, int y, int (*access_matrix)[8]) {
 }
 
 void optimal_move (int x, int y, Position& pos, int (*sol)[8], int (*access_matrix)[8]) {
-    int prev_x{};
-    int prev_y{};
-    int next_x{};
-    int next_y{};
     vector<int> valid_x;
     vector<int> valid_y;
     for (int i = 0, current_x = 0, current_y = 0; i < 8; ++i) {
@@ -73,7 +67,7 @@ void optimal_move (int x, int y, Position& pos, int (*sol)[8], int (*access_matr
     }
 }
 
-int find_moves_varnsdorf(int x, int y, int (*sol)[N], int (*access_matrix)[8]) 
+int find_moves_varnsdorf(int (*sol)[N], int (*access_matrix)[8]) 
 {
     static long long count = 0;
     ++count;
@@ -118,7 +112,7 @@ int solve(int current_x = 0, int current_y = 0)
     knight.x = current_x;
     knight.y = current_y;
 
-	if (find_moves_varnsdorf(current_x, current_y, sol, access_matrix) == 0) { 
+	if (find_moves_varnsdorf(sol, access_matrix) == 0) { 
 		std::cout << "Solution does not exist"; 
 		return 0; 
 	} 
