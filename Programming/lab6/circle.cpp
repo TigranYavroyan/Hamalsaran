@@ -10,12 +10,12 @@ bool Circle::_inside_X0Y (double radius, double x, double y) {
     return !(radius < 0 || radius > x || radius > y);
 }
 
-Circle::outside_X0Y::outside_X0Y (const char* msg) : message(msg) {
+Circle::outside_X0Y::outside_X0Y (const char* msg) {
     std::cerr << msg;
 }
 
-const char* Circle::outside_X0Y::what () {
-    return message;
+const char* Circle::outside_X0Y::what () const noexcept {
+    return "outside of X0Y";
 }
 
 Circle::Circle (double radius, double x, double y) {

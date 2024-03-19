@@ -21,9 +21,7 @@ private:
     class outside_X0Y : public std::exception {
     public:
         outside_X0Y (const char* msg);
-        const char* what ();
-    private:
-        const char* message;
+        const char* what () const noexcept override; // without noexcept there is error of overriding
     };
 
     double m_radius{};
