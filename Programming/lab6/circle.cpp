@@ -18,12 +18,11 @@ const char* Circle::outside_X0Y::what () const noexcept {
     return "outside of X0Y";
 }
 
-Circle::Circle (double radius, double x, double y) {
+Circle::Circle (double radius, double x, double y) : m_center(0, 0) {
     if (!_inside_X0Y(radius, x, y))
         _error(__func__);
     m_radius = radius;
-    m_x = x;
-    m_y = y;
+    m_center.set_x_y(x, y);
 }
 
 Circle::Circle (double x, double y) : Circle ((x < y ? x : y), x, y) {}
@@ -31,7 +30,7 @@ Circle::Circle (double x, double y) : Circle ((x < y ? x : y), x, y) {}
 Circle::Circle (double radius) : Circle (radius, radius, radius) {}
 
 void Circle::set_radius (double radius) {
-    if (!_inside_X0Y(radius, m_x, m_y))
+    if (!_inside_X0Y(radius, m_center.get_x(), m_center.get_y()))
         _error(__func__);
     m_radius = radius;
 }
@@ -39,56 +38,60 @@ void Circle::set_radius (double radius) {
 void Circle::set_x (double x) {
     if (x < m_radius)
         _error(__func__);
-    m_x = x;
+    m_center.set_x(x);
 }
 
 void Circle::set_y (double y) {
     if (y < m_radius)
         _error(__func__);
-    m_y = y;
+    m_center.set_x_y(m_center.get_x(), y);
 }
 
 double Circle::get_x () const {
-    return m_x;
+    return m_center.get_x();
 }
 
 double Circle::get_y () const {
-    return m_y;
+    return m_center.get_y();
 }
 
 double Circle::get_radius () const {
     return m_radius;
 }
 
-std::string Circle::info () const {
-    using std::to_string;
-    return "R: " + to_string(m_radius) + "\nX: " + to_string(m_x) + "\nY: " + to_string(m_y);
+Point Circle::get_point () const {
+    return m_center;
 }
 
-bool is_belong_to_circle (const Circle& c, double x, double y) {
+std::string Circle::info () const {
+    using std::to_string;
+    return "R: " + to_string(m_radius) + "\nX: " + to_string(m_center.get_x()) + "\nY: " + to_string(m_center.get_y());
+}
+
+bool circle_utility::is_belong_to_circle (const Circle& c, double x, double y) {
     return (sqrt(pow(x - c.get_x(), 2) + pow(y - c.get_y(), 2)) <= c.get_radius());
 }
 
-double circles_length (const Circle& c) {
+double circle_utility::circles_length (const Circle& c) {
     return 2 * M_PI * c.get_radius();
 }
 
-double circles_surface (const Circle& c) {
+double circle_utility::circles_surface (const Circle& c) {
     return M_PI * c.get_radius() * c.get_radius();
 }
 
-double centers_distance (const Circle& c1, const Circle& c2) {
+double circle_utility::centers_distance (const Circle& c1, const Circle& c2) {
     return sqrt(pow(c2.get_x() - c1.get_x(), 2) + pow(c2.get_y() - c1.get_y(), 2));
 }
 
-void offset_parallel_from_OX (Circle& c, double y) {
+void circle_utility::offset_parallel_from_OX (Circle& c, double y) {
     c.set_y(c.get_y() + y);
 }
 
-void offset_parallel_from_OY (Circle& c, double x) {
+void circle_utility::offset_parallel_from_OY (Circle& c, double x) {
     c.set_x(c.get_x() + x);
 }
 
-void increase_surface (Circle& c, double k) {
+void circle_utility::increase_surface (Circle& c, double k) {
     c.set_radius(c.get_radius() * sqrt(k));
 }
