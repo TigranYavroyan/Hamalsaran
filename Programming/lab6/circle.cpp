@@ -47,6 +47,12 @@ void Circle::set_y (double y) {
     m_center.set_x_y(m_center.get_x(), y);
 }
 
+void Circle::set_point (const Point& p) {
+    if (!_inside_X0Y(m_radius, p.get_x(), p.get_y()))
+        _error(__func__);
+    m_center = p;
+}
+
 double Circle::get_x () const {
     return m_center.get_x();
 }
