@@ -29,28 +29,32 @@ Circle::Circle (double x, double y) : Circle ((x < y ? x : y), x, y) {}
 
 Circle::Circle (double radius) : Circle (radius, radius, radius) {}
 
-void Circle::set_radius (double radius) {
+Circle& Circle::set_radius (double radius) {
     if (!_inside_X0Y(radius, m_center.get_x(), m_center.get_y()))
         _error(__func__);
     m_radius = radius;
+    return *this;
 }
 
-void Circle::set_x (double x) {
+Circle& Circle::set_x (double x) {
     if (x < m_radius)
         _error(__func__);
     m_center.set_x(x);
+    return *this;
 }
 
-void Circle::set_y (double y) {
+Circle& Circle::set_y (double y) {
     if (y < m_radius)
         _error(__func__);
     m_center.set_x_y(m_center.get_x(), y);
+    return *this;
 }
 
-void Circle::set_point (const Point& p) {
+Circle& Circle::set_point (const Point& p) {
     if (!_inside_X0Y(m_radius, p.get_x(), p.get_y()))
         _error(__func__);
     m_center = p;
+    return *this;
 }
 
 double Circle::get_x () const {
@@ -82,7 +86,7 @@ double circle_utility::circles_length (const Circle& c) {
     return 2 * M_PI * c.get_radius();
 }
 
-double circle_utility::circles_surface (const Circle& c) {
+double circles_surface (const Circle& c) { // Circles friend
     return M_PI * c.get_radius() * c.get_radius();
 }
 
