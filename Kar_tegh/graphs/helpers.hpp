@@ -26,7 +26,7 @@ private:
     double Km{}; // միջանկյալ տարրերի գործակից
     double Knk{}; // ներքին կապերի գործակից
     double Kmo_average{}; // միջանկյալ տարրերի օգտագործման միջին գործակից
-    double Kkrk{}; // ելքային տարրերի 
+    double Kkrk{}; // ելքային տարրերի
     int unit_connections_size{}; // միավոր կապերի քանակ
     int top_size{}; // գագաթների քանակ
 private:
@@ -156,15 +156,15 @@ Matrix Graph_display::_creating_A (int **matrix, int N) {
     }
     Matrix goal(max, max);
     for (int i = 0; i < N; ++i) {
-        goal(matrix[i][0] - 1, matrix[i][1] - 1) = 1;
+        goal[matrix[i][0] - 1][matrix[i][1] - 1] = 1;
     }
-    
+
     return goal;
 }
 
 
 // for finding t5 (both static and dynamic matrixes)
-bool Graph_display::_is_t2 (int num) { 
+bool Graph_display::_is_t2 (int num) {
     for (int i : t2) {
         if (i == num)
             return true;
@@ -292,9 +292,9 @@ Matrix Graph_display::_creating_A (int (&matrix)[N][2]) {
     }
     Matrix goal(max, max);
     for (int i = 0; i < N; ++i) {
-        goal(matrix[i][0] - 1, matrix[i][1] - 1) = 1;
+        goal[matrix[i][0] - 1][matrix[i][1] - 1] = 1;
     }
-    
+
     return goal;
 }
 
@@ -305,7 +305,7 @@ void Graph_display::_find_t4 (const Matrix& m) {
     int j = 0;
     while (i < m.get_row()) {
         while (j < m.get_col()) {
-            if (m(j, i) != 0) {
+            if (m[j][i] != 0) {
                 flag = false;
                 break;
             }
@@ -363,7 +363,7 @@ void Graph_display::_print_t7 (int count) {
 
 bool Graph_display::_major_diagonal_zero_check (const Matrix& m) const {
     for (int i = 0; i < m.get_row(); ++i) {
-        if (m(i, i) != 0)
+        if (m[i][i] != 0)
             return true;
     }
     return false;

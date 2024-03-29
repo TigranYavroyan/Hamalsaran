@@ -6,6 +6,14 @@
 #include <iomanip>
 
 class Matrix {
+	// proxy for operator[]
+	class my_array {
+		int *m_arr;
+	public:
+		my_array (int *arr);
+		int operator[] (int i) const;
+		int& operator[] (int i);
+	};
 public:
     Matrix ();
     Matrix (int row, int col);
@@ -26,8 +34,8 @@ public:
     const Matrix& operator= (const Matrix& rhs);
     Matrix operator* (const Matrix& rhs);
     void operator+= (const Matrix& rhs);
-    int& operator()(int i, int j);
-    const int& operator()(int i, int j) const;
+	const my_array operator[] (int i) const;
+	my_array operator[] (int i);
 private:
     int **m_matrix{nullptr};
     int m_row{};
