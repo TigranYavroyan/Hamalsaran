@@ -77,11 +77,13 @@ int Matrix::get_col () const {
 // void Matrix::display () const {
 //     if (empty())
 //         std::cout << "Matrix is empty";
-//     for (int i = 0; i < m_row; ++i) {
-//         for (int j = 0; j < m_col; ++j) {
-//             std::cout << std::setw(4) << m_matrix[i][j];
+//     else {
+//         for (int i = 0; i < m_row; ++i) {
+//             for (int j = 0; j < m_col; ++j) {
+//                 std::cout << std::setw(4) << m_matrix[i][j];
+//             }
+//             std::cout << std::endl;
 //         }
-//         std::cout << std::endl;
 //     }
 //     std::cout << std::endl;
 // }
