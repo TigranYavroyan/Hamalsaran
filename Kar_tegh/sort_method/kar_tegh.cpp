@@ -1,36 +1,3 @@
-// #include <iostream>
-
-// class Pixel {
-// 	int x{};
-// 	int y{};
-// public:
-// 	Pixel () = default;
-// 	explicit Pixel (int _x) : x{_x}, y{_x} {}
-// 	Pixel (int _x, int _y) : x{_x}, y{_y} {}
-// 	Pixel (const Pixel& other) : x{other.x} , y{other.y} {}
-// public:
-// 	void print () const {
-// 		std::cout << x << ' ' << y << std::endl;
-// 	}
-// 	int get_x () const {
-// 	    return x;
-// 	}
-// 	int get_y () const {
-// 	    return y;
-// 	}
-// public:
-// };
-
-// Pixel operator+ (int x, const Pixel& obj) {
-//     return Pixel(obj.get_x() + x, obj.get_y() + x);
-// }
-
-// int main () {
-// 	Pixel ob(4, 5);
-// 	Pixel ob2 = 5 + ob;
-// 	ob2.print();
-// }
-
 #include <iostream>
 #include <vector>
 #include <cmath>
