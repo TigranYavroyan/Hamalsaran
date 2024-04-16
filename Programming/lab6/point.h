@@ -8,7 +8,7 @@ public:
     Point (double x);
     Point (double x, double y);
     // seg fault
-    friend std::istream& operator>> (std::istream& is, const Point& obj);
+    friend std::istream& operator>> (std::istream& is, Point& obj);
 public:
     void set_x (double x);
     void set_x_y (double x, double y);

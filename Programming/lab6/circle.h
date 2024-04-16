@@ -21,7 +21,7 @@ class Circle {
 public:
     friend double circle_utility::circles_surface (const Circle& c);
     // // segmentation fault
-    // std::istream& operator>> (std::istream& is, const Point& obj)
+    // friend std::istream& operator>> (std::istream& is, const Point& obj);
 
     Circle (double radius, double x, double y);
     Circle (double x, double y);

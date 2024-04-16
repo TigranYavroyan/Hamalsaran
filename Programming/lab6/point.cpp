@@ -95,7 +95,7 @@ std::ostream& operator<< (std::ostream& os, const Point& obj) {
 }
 
 // segmentation fault
-// std::istream& operator>> (std::istream& is, const Point& obj) {
-//     is >> obj.m_x >> obj.m_y;
-//     return is;
-// }
+std::istream& operator>> (std::istream& is, Point& obj) {
+    is >> obj.m_x >> obj.m_y;
+    return is;
+}
