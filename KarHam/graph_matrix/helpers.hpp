@@ -32,7 +32,7 @@ private:
     double Km{}; // միջանկյալ տարրերի գործակից
     double Knk{}; // ներքին կապերի գործակից
     double Kmo_average{}; // միջանկյալ տարրերի օգտագործման միջին գործակից
-    double Kkrk{}; // ելքային տարրերի 
+    double Kkrk{}; // ելքային տարրերի
     int unit_connections_size{}; // միավոր կապերի քանակ
     int top_size{}; // գագաթների քանակ
 private:
@@ -100,11 +100,11 @@ void Graph_display::operator() () {
 
     delete[] matrix;
     matrix = nullptr;
-    
+
     _display(m1);
 }
 //----------------------------------------for finding the road---------------------------------------------
-static int __min(std::vector<double> vec) {
+static int __min(std::vector<int> vec) {
     int min_i = 0;
     for (int i = 1; i < vec.size(); ++i) {
         if (vec[min_i] > vec[i])
@@ -133,36 +133,49 @@ static int find_index (int (&matrix)[N][2], int start, int find) {
 }
 
 template <int N, int M>
-void Graph_display::operator() (int (&matrix)[N][2], int (&distances)[M]) {
+void Graph_display::operator() (int (&matrix)[N][2], int (&distances)[M], int start == 1, int max = -1) {
+	// add functionality for start node
+	// add check for max
     unordered_map<int, int> the_Us;
-    vector<int> nodes;
+	unordered_map<int, int> the_associations;
+	if (max == -1) {
     int max = matrix[0][0]; // create separate function
-    for (int i = 1; i < N; ++i) {
-        if (max < matrix[i][1])
-            max = matrix[i][1];
-    }
-    int index = 0;
-    double min = 0;
+		for (int i = 1; i < N; ++i) {
+			if (max < matrix[i][1])
+				max = matrix[i][1];
+		}
+	}
+    int search_from = 0;
+    int min = 0;
     for (int i = 1; i <= max; ++i) {
-        index = find_index (matrix, index, i);
-        if (index == -1) {
+        search_from = find_search_from(matrix, search_from, i);
+        if (search_from == -1) {
             the_Us.insert({i, 0});
-            index = 0;
+			the_associations.insert({i, 0});
+            search_from = 0;
         }
         else {
-            vector<double> U;
-            while (index != -1) {
-                U.push_back(the_Us[matrix[index][0]] + distances[find_Dij_index(matrix, matrix[index][0], matrix[index][1])]);
-                index = find_index (matrix, index + 1, i);
+            vector<int> U;
+			vector<int> Us_search_from;
+            while (search_from != -1) {
+                U.push_back(the_Us[matrix[search_from][0]] + distances[find_Dij_search_from(matrix, matrix[search_from][0], matrix[search_from][1])]);
+				Us_search_from.push_back(matrix[search_from][0]);
+                search_from = find_search_from(matrix, search_from + 1, i);
             }
             min = __min(U);
             the_Us.insert({i, U[min]});
-            index = 0;
+			the_associations.insert({i, Us_search_from[min]});
+            search_from = 0;
         }
     }
-    std::cout.put('\n');
-    for (const auto& pair : the_Us) {
-        std::cout << "Key: " << pair.first << ", Value: " << pair.second << std::endl;
+	for (int i = std::distance(the_associations.begin(), the_associations.end()); i > 0;) {
+		_the_road.push_back(i);
+		i = the_associations[i];
+	}
+	for (auto it = _the_road.rbegin(); it != _the_road.rend(); ++it) {
+        std::cout << *it;
+			if ((it + 1) != _the_road.rend())
+				std::cout  << " -> ";
     }
 }
 //---------------------------------------for dynamic matrix-----------------------------------------------
@@ -227,13 +240,13 @@ Matrix Graph_display::_creating_A (int **matrix, int N) {
     for (int i = 0; i < N; ++i) {
         goal(matrix[i][0] - 1, matrix[i][1] - 1) = 1;
     }
-    
+
     return goal;
 }
 
 
 // for finding t5 (both static and dynamic matrixes)
-bool Graph_display::_is_t2 (int num) { 
+bool Graph_display::_is_t2 (int num) {
     for (int i : t2) {
         if (i == num)
             return true;
@@ -363,7 +376,7 @@ Matrix Graph_display::_creating_A (int (&matrix)[N][2]) {
     for (int i = 0; i < N; ++i) {
         goal(matrix[i][0] - 1, matrix[i][1] - 1) = 1;
     }
-    
+
     return goal;
 }
 
