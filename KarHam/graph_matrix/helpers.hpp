@@ -3,8 +3,11 @@
 
 #include <vector>
 #include "matrix.h"
+#include <cmath>
+#include <unordered_map>
 
 using std::vector;
+using std::unordered_map;
 
 class Graph_display {
 public:
@@ -14,7 +17,10 @@ public:
     template <int N>
     void operator() (int (&matrix)[N][2]);
     void operator() ();
+    template <int N, int M>
+    void operator() (int (&matrix)[N][2], int (&distances)[M]);
 private:
+    vector<int> _the_road; // իտերացիոն հաշվարկների մեթոդով կարճագույն ճանապարհը գտնելու համար
     vector<int> t1; // մուտքային տարրեր
     vector<int> t2; // միջանկյալ տարրեր
     vector<int> t3; // ելքային տարրեր
@@ -26,10 +32,11 @@ private:
     double Km{}; // միջանկյալ տարրերի գործակից
     double Knk{}; // ներքին կապերի գործակից
     double Kmo_average{}; // միջանկյալ տարրերի օգտագործման միջին գործակից
-    double Kkrk{}; // ելքային տարրերի
+    double Kkrk{}; // ելքային տարրերի 
     int unit_connections_size{}; // միավոր կապերի քանակ
     int top_size{}; // գագաթների քանակ
 private:
+//--------------------------------------for finding the road----------------------------------------------
 //---------------------------------------for dynamic matrix-----------------------------------------------
     void _find_t2 (int find, int **matrix, int N);
     void _find_t3 (int **matrix, int N);
@@ -63,6 +70,7 @@ private:
     int **_create_direct_flow_matrix_by_input (int row) const;
     void _console_output (const Matrix& m, int count);
     void print_coefficient ();
+    void print_is_rational ();
     void _display (const Matrix& m1);
 };
 
@@ -90,11 +98,72 @@ void Graph_display::operator() () {
     Matrix m1 = _creating_A(matrix, row);
     top_size = m1.get_row();
 
-    for (int i = 0; i < row; ++i) {
-        delete matrix[i];
-    }
-    delete matrix;
+    delete[] matrix;
+    matrix = nullptr;
+    
     _display(m1);
+}
+//----------------------------------------for finding the road---------------------------------------------
+static int __min(std::vector<double> vec) {
+    int min_i = 0;
+    for (int i = 1; i < vec.size(); ++i) {
+        if (vec[min_i] > vec[i])
+            min_i = i;
+    }
+    return min_i;
+}
+
+template <int N>
+static int find_Dij_index (int (&matrix)[N][2], int from, int to) {
+    for (int i = 0; i < N; ++i) {
+        if (from == matrix[i][0] && to == matrix[i][1])
+            return i;
+    }
+    return -1;
+}
+
+template <int N>
+static int find_index (int (&matrix)[N][2], int start, int find) {
+    while (start < N) {
+        if (find == matrix[start][1])
+            return start;
+        ++start;
+    }
+    return -1;
+}
+
+template <int N, int M>
+void Graph_display::operator() (int (&matrix)[N][2], int (&distances)[M]) {
+    unordered_map<int, int> the_Us;
+    vector<int> nodes;
+    int max = matrix[0][0]; // create separate function
+    for (int i = 1; i < N; ++i) {
+        if (max < matrix[i][1])
+            max = matrix[i][1];
+    }
+    int index = 0;
+    double min = 0;
+    for (int i = 1; i <= max; ++i) {
+        index = find_index (matrix, index, i);
+        if (index == -1) {
+            the_Us.insert({i, 0});
+            index = 0;
+        }
+        else {
+            vector<double> U;
+            while (index != -1) {
+                U.push_back(the_Us[matrix[index][0]] + distances[find_Dij_index(matrix, matrix[index][0], matrix[index][1])]);
+                index = find_index (matrix, index + 1, i);
+            }
+            min = __min(U);
+            the_Us.insert({i, U[min]});
+            index = 0;
+        }
+    }
+    std::cout.put('\n');
+    for (const auto& pair : the_Us) {
+        std::cout << "Key: " << pair.first << ", Value: " << pair.second << std::endl;
+    }
 }
 //---------------------------------------for dynamic matrix-----------------------------------------------
 void Graph_display::_find_t2 (int find, int **matrix, int N) {
@@ -156,15 +225,15 @@ Matrix Graph_display::_creating_A (int **matrix, int N) {
     }
     Matrix goal(max, max);
     for (int i = 0; i < N; ++i) {
-        goal[matrix[i][0] - 1][matrix[i][1] - 1] = 1;
+        goal(matrix[i][0] - 1, matrix[i][1] - 1) = 1;
     }
-
+    
     return goal;
 }
 
 
 // for finding t5 (both static and dynamic matrixes)
-bool Graph_display::_is_t2 (int num) {
+bool Graph_display::_is_t2 (int num) { 
     for (int i : t2) {
         if (i == num)
             return true;
@@ -292,9 +361,9 @@ Matrix Graph_display::_creating_A (int (&matrix)[N][2]) {
     }
     Matrix goal(max, max);
     for (int i = 0; i < N; ++i) {
-        goal[matrix[i][0] - 1][matrix[i][1] - 1] = 1;
+        goal(matrix[i][0] - 1, matrix[i][1] - 1) = 1;
     }
-
+    
     return goal;
 }
 
@@ -305,7 +374,7 @@ void Graph_display::_find_t4 (const Matrix& m) {
     int j = 0;
     while (i < m.get_row()) {
         while (j < m.get_col()) {
-            if (m[j][i] != 0) {
+            if (m(j, i) != 0) {
                 flag = false;
                 break;
             }
@@ -363,7 +432,7 @@ void Graph_display::_print_t7 (int count) {
 
 bool Graph_display::_major_diagonal_zero_check (const Matrix& m) const {
     for (int i = 0; i < m.get_row(); ++i) {
-        if (m[i][i] != 0)
+        if (m(i, i) != 0)
             return true;
     }
     return false;
@@ -417,6 +486,15 @@ void Graph_display::print_coefficient () {
     std::cout << "Kkrk = " << Kkrk << std::endl;
 }
 
+void Graph_display::print_is_rational () {
+    double epsilion = fabs(Km - Kmo_average);
+    std::cout << "Epsiliion is: " << epsilion << "\n\n";
+    if (epsilion >= 0.01 && epsilion <= 0.1)
+        std::cout << "The graph is rational" << std::endl;
+    else
+        std::cout << "The graph is not raional" << std::endl;
+}
+
 void Graph_display::_display (const Matrix& m1) {
     char check{};
     short count{1};
@@ -452,6 +530,7 @@ void Graph_display::_display (const Matrix& m1) {
         _print_elements();
         _print_t4();
         print_coefficient();
+        print_is_rational();
     }
 }
 

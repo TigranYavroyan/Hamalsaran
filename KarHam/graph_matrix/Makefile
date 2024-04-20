@@ -3,7 +3,7 @@
 # $< represents the first prerequisite
 
 CC = g++
-CFLAGS = -Wall -Wextra -Werror -std=c++17
+CFLAGS = -std=c++2a #-Wall -Wextra -Werror
 SRCS = *.cpp
 OBJS = $(SRCS:.cpp=.o)
 EXEC = ./do

@@ -1,7 +1,5 @@
 #include "matrix.h"
 
-Matrix::my_array::my_array (int *arr) : m_arr{arr} {}
-
 Matrix::Matrix () : m_row{3}, m_col{m_row} {
     _get_area();
 
@@ -79,13 +77,11 @@ int Matrix::get_col () const {
 // void Matrix::display () const {
 //     if (empty())
 //         std::cout << "Matrix is empty";
-//     else {
-//         for (int i = 0; i < m_row; ++i) {
-//             for (int j = 0; j < m_col; ++j) {
-//                 std::cout << std::setw(4) << m_matrix[i][j];
-//             }
-//             std::cout << std::endl;
+//     for (int i = 0; i < m_row; ++i) {
+//         for (int j = 0; j < m_col; ++j) {
+//             std::cout << std::setw(4) << m_matrix[i][j];
 //         }
+//         std::cout << std::endl;
 //     }
 //     std::cout << std::endl;
 // }
@@ -146,23 +142,6 @@ Matrix Matrix::operator+ (const Matrix& rhs) {
     return other;
 }
 
-
-int& Matrix::my_array::operator[] (int i) {
-	return m_arr[i];
-}
-
-int Matrix::my_array::operator[] (int i) const {
-	return m_arr[i];
-}
-
-const Matrix::my_array Matrix::operator[] (int i) const {
-	return my_array(m_matrix[i]);
-}
-
-Matrix::my_array Matrix::operator[] (int i) {
-	return my_array(m_matrix[i]); // can't do casts like meyers, cause of rvalue
-}
-
 const Matrix& Matrix::operator= (const Matrix& rhs) {
     if (this == &rhs)
         return *this;
@@ -203,6 +182,14 @@ void Matrix::operator+= (const Matrix& rhs) {
             m_matrix[i][j] += rhs.m_matrix[i][j];
         }
     }
+}
+
+const int& Matrix::operator() (int i, int j) const {
+    return m_matrix[i][j];
+}
+
+int& Matrix::operator() (int i, int j) {
+    return const_cast<int&>(static_cast<const Matrix&>(*this)(i, j));
 }
 
 void Matrix::_set_random () {
