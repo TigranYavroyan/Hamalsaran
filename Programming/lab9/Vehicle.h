@@ -7,6 +7,7 @@ class Vehicle {
 public:
     Vehicle (const Engine& engine = Engine("V6", petrol, 500, 2020), const std::string& produced_by = "Gegham", 
                 const std::string& model = "Mator", double price = 15000.5, double weight = 5000, double max_speed = 500, double date = 2024);
+    virtual ~Vehicle ();
     void set_engine (const Engine& other);
     void set_producer (const std::string& producer);
     void set_model (const std::string& model);
@@ -21,6 +22,8 @@ public:
     double get_weight () const;
     double get_max_speed () const;
     double get_data () const;
+    
+    virtual void draw () const;
 private:
     Engine m_engine;
     std::string m_produced_by;
@@ -31,4 +34,5 @@ private:
     double m_date;
 };
 
+std::ostream& operator << (std::ostream& os, const Vehicle& vehicle);
 #endif // VEHICLE_H

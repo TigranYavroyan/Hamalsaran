@@ -1,4 +1,5 @@
 #include "Vehicle.h"
+#include <iostream>
 
 Vehicle::Vehicle (const Engine& engine, const std::string& produced_by, const std::string& model, double price, double weight, double max_speed, double date) :
     m_engine{engine},
@@ -8,6 +9,8 @@ Vehicle::Vehicle (const Engine& engine, const std::string& produced_by, const st
     m_weight{weight},
     m_max_speed{max_speed},
     m_date{date} {}
+
+Vehicle::~Vehicle () {std::cout << "Vehicles dtor called" << std::endl;}
 
 
 void Vehicle::set_engine (const Engine& other) {
@@ -64,4 +67,15 @@ double Vehicle::get_max_speed () const {
 
 double Vehicle::get_data () const {
     return m_date;
+}
+
+std::ostream& operator << (std::ostream& os, const Vehicle& vehicle) {
+    os << vehicle.get_engine() << '\n' << vehicle.get_producer() << '\n' << vehicle.get_model() << '\n' 
+        << vehicle.get_price() << '\n' << vehicle.get_weight() << '\n'
+        << vehicle.get_max_speed() << '\n' << vehicle.get_data();
+    return os;
+}
+
+void Vehicle::draw() const {
+    std::cout << "This is the Vehicles::draw()" << std::endl;
 }

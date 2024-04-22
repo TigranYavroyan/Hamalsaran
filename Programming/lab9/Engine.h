@@ -24,4 +24,6 @@ private:
     int m_date;
 };
 
+std::ostream& operator << (std::ostream& os, const Engine& engine);
+
 #endif // ENGINE_H

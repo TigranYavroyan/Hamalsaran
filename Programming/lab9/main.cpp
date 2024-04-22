@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Car.h"
-
+#include "Truck.h"
+#include <memory>
 #include <vector>
 
 template <int N>
@@ -20,12 +21,16 @@ void print_by_decreasing (Car (&cars)[N]) {
 }
 
 int main () {
-    Car cars[5] = {
-        Car(Engine("V6", petrol, 8000, 2024), 6),
-        Car(Engine("V7", petrol, 7000, 2024), 4),
-        Car(Engine("V8", petrol, 9000, 2024), 4),
-        Car(Engine("V9", petrol, 6000, 2024), 4),
-        Car(Engine("V10", petrol, 5000, 2024), 7)
-    };
-    print_by_decreasing(cars);
+    // Car cars[5] = {
+    //     Car(Engine("V6", petrol, 8000, 2024), 6),
+    //     Car(Engine("V7", petrol, 7000, 2024), 4),
+    //     Car(Engine("V8", petrol, 9000, 2024), 4),
+    //     Car(Engine("V9", petrol, 6000, 2024), 4),
+    //     Car(Engine("V10", petrol, 5000, 2024), 7)
+    // };
+    // std::cout << cars[0] << std::endl;
+    // print_by_decreasing(cars);
+
+    std::unique_ptr<Vehicle> v_ptr = std::make_unique<Truck>();
+    v_ptr->draw();
 }

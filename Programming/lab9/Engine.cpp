@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include <iostream>
 
 Engine::Engine (const std::string& name, Engine_type engine_type, double power, int date) :
     m_name{name},
@@ -36,6 +37,32 @@ double Engine::get_power () const {
 
 int Engine::get_date () const {
     return m_date;
+}
+
+static std::ostream& operator << (std::ostream& os, Engine_type engine_type) {
+    switch (engine_type)
+    {
+        case diesel:
+            os << "diesel";
+            break;
+        case petrol:
+            os << "petrol";
+            break;
+        case gas:
+            os << "gas";
+            break;
+        case electric:
+            os << "electric";
+            break;
+    }
+    return os;
+}
+
+std::ostream& operator << (std::ostream& os, const Engine& engine) {
+    os << "name -> " << engine.get_name() << "\nengine_type -> " 
+        << engine.get_engine_type() << "\npower -> " << engine.get_power() 
+        << "\ndate -> " << engine.get_date();
+    return os;
 }
 
 Engine::~Engine () = default;
