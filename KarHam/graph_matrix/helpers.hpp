@@ -133,22 +133,18 @@ static int find_index (int (&matrix)[N][2], int start, int find) {
 }
 
 template <int N, int M>
-void Graph_display::operator() (int (&matrix)[N][2], int (&distances)[M], int start == 1, int max = -1) {
-	// add functionality for start node
-	// add check for max
+void Graph_display::operator() (int (&matrix)[N][2], int (&distances)[M]) {
     unordered_map<int, int> the_Us;
 	unordered_map<int, int> the_associations;
-	if (max == -1) {
     int max = matrix[0][0]; // create separate function
-		for (int i = 1; i < N; ++i) {
-			if (max < matrix[i][1])
-				max = matrix[i][1];
-		}
-	}
+    for (int i = 1; i < N; ++i) {
+        if (max < matrix[i][1])
+            max = matrix[i][1];
+    }
     int search_from = 0;
     int min = 0;
     for (int i = 1; i <= max; ++i) {
-        search_from = find_search_from(matrix, search_from, i);
+        search_from = find_index(matrix, search_from, i);
         if (search_from == -1) {
             the_Us.insert({i, 0});
 			the_associations.insert({i, 0});
@@ -158,9 +154,9 @@ void Graph_display::operator() (int (&matrix)[N][2], int (&distances)[M], int st
             vector<int> U;
 			vector<int> Us_search_from;
             while (search_from != -1) {
-                U.push_back(the_Us[matrix[search_from][0]] + distances[find_Dij_search_from(matrix, matrix[search_from][0], matrix[search_from][1])]);
+                U.push_back(the_Us[matrix[search_from][0]] + distances[find_Dij_index(matrix, matrix[search_from][0], matrix[search_from][1])]);
 				Us_search_from.push_back(matrix[search_from][0]);
-                search_from = find_search_from(matrix, search_from + 1, i);
+                search_from = find_index(matrix, search_from + 1, i);
             }
             min = __min(U);
             the_Us.insert({i, U[min]});
@@ -177,6 +173,7 @@ void Graph_display::operator() (int (&matrix)[N][2], int (&distances)[M], int st
 			if ((it + 1) != _the_road.rend())
 				std::cout  << " -> ";
     }
+    std::cout.put('\n');
 }
 //---------------------------------------for dynamic matrix-----------------------------------------------
 void Graph_display::_find_t2 (int find, int **matrix, int N) {
